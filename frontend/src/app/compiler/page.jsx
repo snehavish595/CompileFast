@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 import { useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
 import Navbar from "../components/Navbar";
@@ -34,28 +34,37 @@ export default function Compiler() {
       <section className="min-h-screen bg-gray-900 text-white py-10">
         <div className="max-w-6xl mx-auto p-6">
           <h1 className="text-4xl font-bold text-center mb-6">Online Code Editor</h1>
-          <div className="bg-gray-800 p-4 rounded-lg shadow-md">
-            <MonacoEditor
-              height="400px"
-              defaultLanguage="javascript"
-              theme="vs-dark"
-              value={code}
-              onChange={(newCode) => setCode(newCode)}
-            />
+
+          {/* Flex container for side-by-side layout */}
+          <div className="flex flex-col md:flex-row gap-6">
+            {/* Editor */}
+            <div className="w-full md:w-3/5 bg-gray-800 p-4 rounded-lg shadow-md">
+              <MonacoEditor
+                height="400px"
+                defaultLanguage="javascript"
+                theme="vs-dark"
+                value={code}
+                onChange={(newCode) => setCode(newCode)}
+              />
+            </div>
+
+            {/* Output Section */}
+            <div className="w-full md:w-2/5 bg-gray-800 p-4 rounded-lg shadow-md">
+              <h2 className="text-xl font-bold mb-2">Output</h2>
+              <pre className="bg-gray-900 p-3 rounded-lg overflow-auto text-green-400 h-[400px]">
+                {output || "Run your code to see the output here..."}
+              </pre>
+            </div>
           </div>
-          <div className="flex justify-center mt-4">
+
+          {/* Run Button */}
+          <div className="flex justify-center mt-6">
             <button
               onClick={runCode}
               className="px-6 py-3 bg-yellow-500 text-gray-900 font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300"
             >
               Run Code
             </button>
-          </div>
-          <div className="bg-gray-800 p-4 rounded-lg shadow-md mt-6">
-            <h2 className="text-xl font-bold mb-2">Output</h2>
-            <pre className="bg-gray-900 p-3 rounded-lg overflow-auto text-green-400">
-              {output}
-            </pre>
           </div>
         </div>
       </section>
