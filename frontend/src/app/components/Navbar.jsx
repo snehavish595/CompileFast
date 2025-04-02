@@ -41,7 +41,7 @@ export default function Navbar() {
 
 // Brand Logo Component
 const BrandLogo = () => (
-  <h1 className="text-3xl font-extrabold text-white tracking-wide">
+  <h1 className="text-2xl font-bold text-white tracking-wide">
     Compile<span className="text-teal-400">Fast</span>
   </h1>
 );
