@@ -33,10 +33,10 @@ export default function Compiler() {
       <Navbar />
       <section className="min-h-screen bg-gray-900 text-white py-10">
         <div className="max-w-6xl mx-auto p-6">
-          <h1 className="text-4xl font-bold text-center mb-6">Online Code Editor</h1>
+          <h1 className="text-3xl font-bold text-center mb-7 mt-6">Online Code Editor</h1>
 
           {/* Flex container for side-by-side layout */}
-          <div className="flex flex-col md:flex-row gap-6">
+          <div className="flex flex-col md:flex-row gap-6 w-full">
             {/* Editor */}
             <div className="w-full md:w-3/5 bg-gray-800 p-4 rounded-lg shadow-md">
               <MonacoEditor
