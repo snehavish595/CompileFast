@@ -11,17 +11,20 @@ export default function Compiler() {
 
   const runCode = async () => {
     try {
-      const response = await fetch("https://api.jdoodle.com/v1/execute", {
+      const response = await fetch("/api/runCode", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           script: code,
           language: "nodejs",
           versionIndex: "3",
-          clientId: "51865adc89c436c951d94dab2bf60168",
-          clientSecret: "af4b399c8bfa2226786434d9315df9fc00a76c05505dc568b1fc5c641c69bd61",
         }),
       });
+
+      if (!response.ok) {
+        throw new Error("Failed to execute code");
+      }
+
       const result = await response.json();
       setOutput(result.output || "Error executing code");
     } catch (err) {
@@ -55,19 +58,19 @@ export default function Compiler() {
                 <div className="flex gap-3">
                   <button
                     onClick={runCode}
-                    className="bg-green-500 p-2 rounded hover:bg-green-600 transition"
+                    className="bg-green-500 p-2 rounded hover:bg-green-600 transition cursor-pointer"
                   >
                     <FaPlay size={20} />
                   </button>
                   <button
                     onClick={clearCode}
-                    className="bg-red-500 p-2 rounded hover:bg-red-600 transition"
+                    className="bg-red-500 p-2 rounded hover:bg-red-600 transition cursor-pointer"
                   >
                     <FaTrash size={20} />
                   </button>
                   <button
                     onClick={copyCode}
-                    className="bg-blue-500 p-2 rounded hover:bg-blue-600 transition"
+                    className="bg-blue-500 p-2 rounded hover:bg-blue-600 transition cursor-pointer"
                   >
                     <FaCopy size={20} />
                   </button>
@@ -79,7 +82,7 @@ export default function Compiler() {
                 defaultLanguage="javascript"
                 theme="vs-dark"
                 value={code}
-                onChange={(newCode) => StringDecoder(newCode)}
+                onChange={(newCode) => setCode(newCode)}
                 options={{
                   fontSize: 16,
                   minimap: {
