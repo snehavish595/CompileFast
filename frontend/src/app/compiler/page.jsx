@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
-import MonacoEditor from "@monaco-editor/react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import MonacoEditor from "@monaco-editor/react";
+import { FaPlay, FaTrash, FaCopy } from "react-icons/fa";
 
 export default function Compiler() {
-  const [code, setCode] = useState("console.log('Hello, world!');");
+  const [code, setCode] = useState(`console.log("Hello, World!");`);
   const [output, setOutput] = useState("");
 
   const runCode = async () => {
@@ -17,54 +18,85 @@ export default function Compiler() {
           script: code,
           language: "nodejs",
           versionIndex: "3",
-          clientId: "your_client_id",
-          clientSecret: "your_client_secret"
-        })
+          clientId: "51865adc89c436c951d94dab2bf60168",
+          clientSecret: "af4b399c8bfa2226786434d9315df9fc00a76c05505dc568b1fc5c641c69bd61",
+        }),
       });
       const result = await response.json();
       setOutput(result.output || "Error executing code");
-    } catch (error) {
-      setOutput("Execution failed");
+    } catch (err) {
+      setOutput("Execution failed: " + err.message);
     }
+  };
+
+  const clearCode = () => {
+    setCode("");
+  };
+
+  const copyCode = () => {
+    navigator.clipboard.writeText(code);
+    alert("Code copied to clipboard");
   };
 
   return (
     <>
       <Navbar />
       <section className="min-h-screen bg-gray-900 text-white py-10">
-        <div className="max-w-6xl mx-auto p-6">
-          <h1 className="text-3xl font-bold text-center mb-7 mt-6">Online Code Editor</h1>
-
-          {/* Flex container for side-by-side layout */}
+        <div className="max-w-7xl mx-auto p-6">
+          <h1 className="text-3xl font-bold text-center mb-7 mt-6">
+            Online Code Editor
+          </h1>
           <div className="flex flex-col md:flex-row gap-6 w-full">
-            {/* Editor */}
+            {/* Editor Section */}
             <div className="w-full md:w-3/5 bg-gray-800 p-4 rounded-lg shadow-md">
+              {/* Toolbar */}
+              <div className="flex justify-between items-center mb-3">
+                <h2 className="text-lg font-semibold">Editor</h2>
+                <div className="flex gap-3">
+                  <button
+                    onClick={runCode}
+                    className="bg-green-500 p-2 rounded hover:bg-green-600 transition"
+                  >
+                    <FaPlay size={20} />
+                  </button>
+                  <button
+                    onClick={clearCode}
+                    className="bg-red-500 p-2 rounded hover:bg-red-600 transition"
+                  >
+                    <FaTrash size={20} />
+                  </button>
+                  <button
+                    onClick={copyCode}
+                    className="bg-blue-500 p-2 rounded hover:bg-blue-600 transition"
+                  >
+                    <FaCopy size={20} />
+                  </button>
+                </div>
+              </div>
+
               <MonacoEditor
-                height="400px"
+                height="450px"
                 defaultLanguage="javascript"
                 theme="vs-dark"
                 value={code}
-                onChange={(newCode) => setCode(newCode)}
+                onChange={(newCode) => StringDecoder(newCode)}
+                options={{
+                  fontSize: 16,
+                  minimap: {
+                    enabled: false,
+                  },
+                  automaticLayout: true,
+                }}
               />
             </div>
 
             {/* Output Section */}
             <div className="w-full md:w-2/5 bg-gray-800 p-4 rounded-lg shadow-md">
-              <h2 className="text-xl font-bold mb-2">Output</h2>
-              <pre className="bg-gray-900 p-3 rounded-lg overflow-auto text-green-400 h-[400px]">
+              <h2 className="text-lg font-semibold mb-3">Output</h2>
+              <pre className="bg-gray-900 p-3 rounded overflow-auto text-green-400 h-[450px]">
                 {output || "Run your code to see the output here..."}
               </pre>
             </div>
-          </div>
-
-          {/* Run Button */}
-          <div className="flex justify-center mt-6">
-            <button
-              onClick={runCode}
-              className="px-6 py-3 bg-yellow-500 text-gray-900 font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300"
-            >
-              Run Code
-            </button>
           </div>
         </div>
       </section>
