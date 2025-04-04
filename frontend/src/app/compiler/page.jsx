@@ -26,6 +26,7 @@ export default function Compiler() {
       }
 
       const result = await response.json();
+      console.log(result)
       setOutput(result.output || "Error executing code");
     } catch (err) {
       setOutput("Execution failed: " + err.message);
