@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import tempfile
 import os
+from .execution_service import execute_code
 
 @csrf_exempt
 def run_code(request):
@@ -17,7 +18,7 @@ def run_code(request):
             if not script or not language:
                 return JsonResponse({"error": "Missing script or language"}, status=400)
 
-            output = ""
+            output = execute_code(script, language)
 
             if language == "python3":
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".py", mode='w') as temp_file:

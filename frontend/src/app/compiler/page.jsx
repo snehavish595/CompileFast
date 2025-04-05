@@ -10,7 +10,7 @@ export default function Compiler() {
   const [output, setOutput] = useState("");
   const [language, setLanguage] = useState("nodejs");
   const [copied, setCopied] = useState(false);
-  const [loading, setLoading] = useState(false);  // Loading state
+  const [loading, setLoading] = useState(false); // Loading state
 
   const runCode = async () => {
     setLoading(true); // Show loading indicator
@@ -19,8 +19,8 @@ export default function Compiler() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          script: code,
-          language: language,
+          script: code, // The code to execute
+          language: language, // The language selected
           versionIndex: "3",
         }),
       });
@@ -28,16 +28,14 @@ export default function Compiler() {
       if (!response.ok) throw new Error("Failed to execute code");
   
       const result = await response.json();
-      console.log(result)
+      console.log(result);
   
-      // Check if there is an error message
+      // Handle errors properly
       if (result.error) {
-        // Check if `result.error` is an object, then extract the message
-        if (typeof result.error === 'object') {
-          setOutput(`Error: ${JSON.stringify(result.error)}`);
-        } else {
-          setOutput(`Error: ${result.error}`);
-        }
+        const errorMessage = typeof result.error === "object"
+          ? JSON.stringify(result.error) // If it's an object, stringify it
+          : result.error; // If it's a string, use it directly
+        setOutput(`Error: ${errorMessage}`);
       } else {
         setOutput(result.output || "No output available.");
       }
@@ -48,7 +46,8 @@ export default function Compiler() {
     }
   };
   
-  
+
+
   const clearCode = () => setCode("");
   const copyCode = () => {
     navigator.clipboard.writeText(code);
@@ -57,10 +56,10 @@ export default function Compiler() {
   };
 
   const downloadCode = () => {
-    const blob = new Blob([code], { type: 'text/plain' });
-    const link = document.createElement('a');
+    const blob = new Blob([code], { type: "text/plain" });
+    const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = 'code.txt'; 
+    link.download = "code.txt";
     link.click();
   };
 
@@ -69,7 +68,15 @@ export default function Compiler() {
       setCode(`console.log("Hello from Node.js");`);
     } else if (language === "python3") {
       setCode(`print("Hello from Python")`);
-    } 
+    } else if (language === "cpp") {
+      // Set initial C++ code correctly
+      setCode(`#include <iostream>
+          using namespace std;
+          int main() {
+              cout << "Hello from C++" << endl;
+              return 0;
+          }`);
+    }
   }, [language]);
 
   const getLanguageName = (lang) => {
@@ -78,6 +85,8 @@ export default function Compiler() {
         return "Node.js";
       case "python3":
         return "Python";
+      case "cpp":
+        return "C++";
       default:
         return "Code";
     }
@@ -104,6 +113,7 @@ export default function Compiler() {
                 >
                   <option value="nodejs">Node.js</option>
                   <option value="python3">Python</option>
+                  <option value="cpp">C++</option>
                 </select>
 
                 <div className="relative flex gap-2 group">
@@ -139,10 +149,10 @@ export default function Compiler() {
               <MonacoEditor
                 height="520px"
                 language={
-                  language === "python3"
+                  language == "python3"
                     ? "python"
-                    : language === "java"
-                    ? "java"
+                    : language === "cpp"
+                    ? "cpp"
                     : "javascript"
                 }
                 theme="vs-dark"
