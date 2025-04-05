@@ -1,5 +1,6 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import FAQSection from "../components/FAQSection";
 
 export default function GetStarted() {
   return (
@@ -105,48 +106,48 @@ export default function GetStarted() {
           </div>
         </div>
       </section>
-{/* Supported Languages Section */}
-<section className="py-24 bg-gray-100 text-gray-900">
-  <div className="max-w-6xl mx-auto px-6 text-center">
-    <h2 className="text-4xl font-semibold opacity-0 translate-y-6 transition-all duration-1000 ease-out animate-fadeIn">
-      Supported Languages
-    </h2>
-    <p className="text-lg text-gray-600 mt-4 opacity-0 translate-y-6 transition-all duration-1000 delay-200 ease-out animate-fadeIn">
-      Our compiler supports multiple languages, ensuring a seamless coding experience.
-    </p>
+      {/* Supported Languages Section */}
+      <section className="py-24 bg-gray-100 text-gray-900">
+        <div className="max-w-6xl mx-auto px-6 text-center">
+          <h2 className="text-4xl font-semibold opacity-0 translate-y-6 transition-all duration-1000 ease-out animate-fadeIn">
+            Supported Languages
+          </h2>
+          <p className="text-lg text-gray-600 mt-4 opacity-0 translate-y-6 transition-all duration-1000 delay-200 ease-out animate-fadeIn">
+            Our compiler supports multiple languages, ensuring a seamless coding
+            experience.
+          </p>
 
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 mt-12">
-      {[
-        { name: "Python", icon: "/icons/python.svg" },
-        { name: "JavaScript", icon: "/icons/javascript.svg" },
-        { name: "C++", icon: "/icons/cpp.svg" },
-        { name: "Java", icon: "/icons/java.svg" },
-        { name: "C#", icon: "/icons/csharp.svg" },
-        { name: "Ruby", icon: "/icons/ruby.svg" },
-        { name: "Dart", icon: "/icons/dart.svg" },
-        { name: "Go", icon: "/icons/go.svg" },
-        { name: "Kotlin", icon: "/icons/kotlin.svg" },
-        { name: "PHP", icon: "/icons/php.png" },
-        { name: "Rust", icon: "/icons/rust.svg" },
-        { name: "TypeScript", icon: "/icons/typescript.svg" },
-      ].map((lang, index) => (
-        <div
-          key={index}
-          className="flex flex-col items-center bg-white p-6 rounded-lg shadow-md border border-gray-200 
-                     transform scale-100 hover:scale-105 hover:shadow-xl transition-all duration-300 ease-in-out animate-slideUp"
-        >
-          <img
-            src={lang.icon}
-            alt={lang.name}
-            className="h-12 w-12 transition-transform duration-300 hover:scale-110"
-          />
-          <h3 className="text-lg font-medium mt-4">{lang.name}</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 mt-12">
+            {[
+              { name: "Python", icon: "/icons/python.svg" },
+              { name: "JavaScript", icon: "/icons/javascript.svg" },
+              { name: "C++", icon: "/icons/cpp.svg" },
+              { name: "Java", icon: "/icons/java.svg" },
+              { name: "C#", icon: "/icons/csharp.svg" },
+              { name: "Ruby", icon: "/icons/ruby.svg" },
+              { name: "Dart", icon: "/icons/dart.svg" },
+              { name: "Go", icon: "/icons/go.svg" },
+              { name: "Kotlin", icon: "/icons/kotlin.svg" },
+              { name: "PHP", icon: "/icons/php.png" },
+              { name: "Rust", icon: "/icons/rust.svg" },
+              { name: "TypeScript", icon: "/icons/typescript.svg" },
+            ].map((lang, index) => (
+              <div
+                key={index}
+                className="flex flex-col items-center bg-white p-6 rounded-lg shadow-md border border-gray-200 
+                     transform scale-100 hover:scale-105 hover:shadow-xl transition-all duration-300 ease-in-out animate-slideUp cursor-pointer"
+              >
+                <img
+                  src={lang.icon}
+                  alt={lang.name}
+                  className="h-12 w-12 transition-transform duration-300 hover:scale-110"
+                />
+                <h3 className="text-lg font-medium mt-4">{lang.name}</h3>
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
-
+      </section>
 
       {/* Call-to-Action Section */}
       <section className="py-24 bg-blue-600 text-white text-center">
@@ -161,6 +162,9 @@ export default function GetStarted() {
           Open Compiler
         </a>
       </section>
+
+      {/* FAQ Section */}
+     <FAQSection/>
 
       <Footer />
     </>

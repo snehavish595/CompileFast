@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import MonacoEditor from "@monaco-editor/react";
-import { FaPlay, FaTrash, FaCopy } from "react-icons/fa";
+import { FaPlay, FaTrash, FaCopy, FaDownload } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
@@ -37,6 +37,14 @@ export default function Compiler() {
     navigator.clipboard.writeText(code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const downloadCode = () => {
+    const blob = new Blob([code], { type: 'text/plain' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'code.txt'; // Customize the filename as needed
+    link.click();
   };
 
   useEffect(() => {
@@ -107,18 +115,16 @@ export default function Compiler() {
                     onClick={copyCode}
                     className="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded flex items-center gap-2 text-sm transition"
                   >
-                    <FaCopy />
-                    Copy
+                    <FaCopy /> Copy
                   </button>
 
-                  {/* Tooltip message */}
-                  <div
-                    className={`absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
-                      copied ? "opacity-100" : "opacity-0"
-                    }`}
+                  {/* Download Button */}
+                  <button
+                    onClick={downloadCode}
+                    className="bg-yellow-600 hover:bg-yellow-700 px-3 py-2 rounded flex items-center gap-1 text-sm"
                   >
-                    Copied!
-                  </div>
+                    <FaDownload /> Download
+                  </button>
                 </div>
               </div>
 
