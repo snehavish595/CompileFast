@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import MonacoEditor from "@monaco-editor/react";
-import { FaPlay, FaTrash, FaCopy, FaDownload } from "react-icons/fa";
+import { FaPlay, FaTrash, FaCopy, FaDownload, FaSpinner } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
@@ -10,8 +10,10 @@ export default function Compiler() {
   const [output, setOutput] = useState("");
   const [language, setLanguage] = useState("nodejs");
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);  // Loading state
 
   const runCode = async () => {
+    setLoading(true); // Show loading indicator
     try {
       const response = await fetch("http://127.0.0.1:8000/api/runCode/", {
         method: "POST",
@@ -22,16 +24,31 @@ export default function Compiler() {
           versionIndex: "3",
         }),
       });
-
+  
       if (!response.ok) throw new Error("Failed to execute code");
-
+  
       const result = await response.json();
-      setOutput(result.output || "Error executing code");
+      console.log(result)
+  
+      // Check if there is an error message
+      if (result.error) {
+        // Check if `result.error` is an object, then extract the message
+        if (typeof result.error === 'object') {
+          setOutput(`Error: ${JSON.stringify(result.error)}`);
+        } else {
+          setOutput(`Error: ${result.error}`);
+        }
+      } else {
+        setOutput(result.output || "No output available.");
+      }
     } catch (err) {
       setOutput("Execution failed: " + err.message);
+    } finally {
+      setLoading(false); // Hide loading indicator
     }
   };
-
+  
+  
   const clearCode = () => setCode("");
   const copyCode = () => {
     navigator.clipboard.writeText(code);
@@ -43,7 +60,7 @@ export default function Compiler() {
     const blob = new Blob([code], { type: 'text/plain' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'code.txt'; // Customize the filename as needed
+    link.download = 'code.txt'; 
     link.click();
   };
 
@@ -52,13 +69,7 @@ export default function Compiler() {
       setCode(`console.log("Hello from Node.js");`);
     } else if (language === "python3") {
       setCode(`print("Hello from Python")`);
-    } else if (language === "java") {
-      setCode(`public class Main {
-  public static void main(String[] args) {
-    System.out.println("Hello from Java");
-  }
-}`);
-    }
+    } 
   }, [language]);
 
   const getLanguageName = (lang) => {
@@ -67,8 +78,6 @@ export default function Compiler() {
         return "Node.js";
       case "python3":
         return "Python";
-      case "java":
-        return "Java";
       default:
         return "Code";
     }
@@ -83,7 +92,7 @@ export default function Compiler() {
             Online {getLanguageName(language)} Compiler
           </h1>
 
-          <div className="flex flex-col lg:flex-row gap-6 ">
+          <div className="flex flex-col lg:flex-row gap-6">
             {/* Editor Section */}
             <div className="w-full lg:w-1/2 bg-[#1e293b] rounded-lg shadow-lg">
               {/* Toolbar */}
@@ -95,7 +104,6 @@ export default function Compiler() {
                 >
                   <option value="nodejs">Node.js</option>
                   <option value="python3">Python</option>
-                  <option value="java">Java</option>
                 </select>
 
                 <div className="relative flex gap-2 group">
@@ -118,7 +126,6 @@ export default function Compiler() {
                     <FaCopy /> Copy
                   </button>
 
-                  {/* Download Button */}
                   <button
                     onClick={downloadCode}
                     className="bg-yellow-600 hover:bg-yellow-700 px-3 py-2 rounded flex items-center gap-1 text-sm"
@@ -156,9 +163,16 @@ export default function Compiler() {
               <h2 className="text-xl font-semibold mb-3 border-b border-gray-600 pb-1">
                 Output
               </h2>
-              <pre className="bg-[#0f172a] text-green-400 p-4 rounded-lg h-[520px] overflow-auto whitespace-pre-wrap">
-                {output || "Run your code to see output here..."}
-              </pre>
+              <div className="bg-[#0f172a] text-green-400 p-4 rounded-lg h-[520px] overflow-auto whitespace-pre-wrap">
+                {/* Show loading spinner when running the code */}
+                {loading ? (
+                  <div className="flex justify-center items-center h-full">
+                    <FaSpinner className="animate-spin text-4xl text-yellow-500" />
+                  </div>
+                ) : (
+                  output || "Run your code to see output here..."
+                )}
+              </div>
             </div>
           </div>
         </div>
