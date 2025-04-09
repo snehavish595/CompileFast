@@ -9,8 +9,11 @@ from .execution_service import execute_code
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import permissions
+from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view
@@ -127,3 +130,19 @@ def login(request):
             'refresh_token': str(refresh),
         })
     return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class UserProfile(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+
+        user_data={
+            "username": user.username,
+            "email": user.email,
+            "bio":user.profile.bio if hasattr(user, 'profile') else "",
+            "profile_picture":user.profile.profile_picture.url if hasattr(user, 'profile') and user.profile.profile_picture else "",
+        }
+
+        return Response(user_data, status=status.HTTP_200_OK)
