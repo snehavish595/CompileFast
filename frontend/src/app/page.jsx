@@ -1,19 +1,26 @@
+"use client"; // Ensure this is a client-side component
+
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"; // Correct import for Navigate
 import Register from "./components/Register";
 import Home from "./home/page";
-import Login from "./components/Login";
-import PrivateRoute from "./components/PrivateRoute";  // Protect routes
+import Login from "./components/Login";  // Ensure Login component is imported correctly
+import ProtectedComponent from "./components/ProtectedComponent"; // Import ProtectedComponent
 
 const App = () => {
+  const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
+
   return (
     <Router>
-      <Switch>
-      <Route path="/" component={Home} />
-        <Route path="/register" component={Register} />
-        <Route path="/login" component={Login} />
-        <PrivateRoute path="/protected" component={ProtectedComponent} />  // Example protected route
-      </Switch>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />  {/* Correct /login route */}
+        <Route
+          path="/protected"
+          element={token ? <ProtectedComponent /> : <Navigate to="/login" replace />}
+        />
+      </Routes>
     </Router>
   );
 };

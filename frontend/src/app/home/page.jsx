@@ -1,4 +1,4 @@
-// pages/index.tsx (Home Page)
+
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 

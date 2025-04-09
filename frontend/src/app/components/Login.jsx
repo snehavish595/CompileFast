@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import api from "../api";  // Axios instance
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+
 
 
 
@@ -21,8 +22,8 @@ const Login = () => {
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("refresh_token", refresh_token);
 
-      const decodedToken = jwt_decode(access_token);
-      console.log(decodedToken);  // Log decoded JWT
+      const decodedToken = jwtDecode(access_token);
+      console.log(decodedToken); 
 
       alert("Login successful!");
     } catch (error) {
