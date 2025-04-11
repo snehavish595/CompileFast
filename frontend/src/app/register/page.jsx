@@ -1,21 +1,22 @@
-"use client";  // Ensure this is a client-side component
+"use client"; // Ensure this is a client-side component
 
-import React, { useState } from "react";  // Import useState
-import api from "../api";  // Axios instance
-import Footer from "../components/Footer";  // Import Footer component
-import Navbar from "../components/Navbar";  // Import Navbar component
+import React, { useState } from "react"; // Import useState
+import api from "../api"; // Axios instance
+import Footer from "../components/Footer"; // Import Footer component
+import Navbar from "../components/Navbar"; // Import Navbar component
 
 const Register = () => {
-  const [username, setUsername] = useState("");  // Initialize username state
-  const [email, setEmail] = useState("");  // Initialize email state
-  const [password, setPassword] = useState("");  // Initialize password state
-  const [loading, setLoading] = useState(false);  // Track loading state
-  const [errorMessage, setErrorMessage] = useState("");  // Store error message
+  const [username, setUsername] = useState(""); // Initialize username state
+  const [email, setEmail] = useState(""); // Initialize email state
+  const [password, setPassword] = useState(""); // Initialize password state
+  const [loading, setLoading] = useState(false);
+  const [fullName, setFullName] = useState(""); // Track loading state
+  const [errorMessage, setErrorMessage] = useState(""); // Store error message
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setErrorMessage("");  // Reset previous error message
+    setErrorMessage(""); // Reset previous error message
 
     // Validate form fields before sending request
     if (!username || !email || !password) {
@@ -29,6 +30,7 @@ const Register = () => {
         username,
         email,
         password,
+        full_name: fullName, // Include full name in the request
       });
       console.log("Registration successful:", response.data);
       alert("Registration successful! Please log in.");
@@ -36,7 +38,11 @@ const Register = () => {
       window.location.href = "/login";
     } catch (error) {
       console.error("Registration failed:", error);
-      setErrorMessage(error.response ? error.response.data : "Registration failed. Please try again.");
+      setErrorMessage(
+        error.response
+          ? error.response.data
+          : "Registration failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -53,7 +59,10 @@ const Register = () => {
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-300">
               Or{" "}
-              <a href="/login" className="font-medium text-teal-600 hover:text-teal-500">
+              <a
+                href="/login"
+                className="font-medium text-teal-600 hover:text-teal-500"
+              >
                 sign in to your account
               </a>
             </p>
@@ -80,6 +89,22 @@ const Register = () => {
                   onChange={(e) => setUsername(e.target.value)}
                   className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                   placeholder="Username"
+                />
+              </div>
+
+              <div className="mt-4">
+                <label htmlFor="username" className="sr-only">
+                  Username
+                </label>
+                <input
+                  id="fullName"
+                  name="fullName"
+                  type="text"
+                  required
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
+                  placeholder="Full Name"
                 />
               </div>
 

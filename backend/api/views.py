@@ -93,13 +93,15 @@ class UserSerializer(Serializer):
     username = CharField(max_length=150)
     email = CharField(max_length=255)
     password = CharField(write_only=True)
-
+    full_name = CharField(max_length=255)
     def create(self, validated_data):
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
             password=validated_data['password']
         )
+        user.first_name=validated_data['full_name']
+        user.save()
         return user
 
 
@@ -139,6 +141,7 @@ class UserProfile(APIView):
 
         user_data = {
             "username": user.username,    
+            "full_name": user.first_name,
         }
 
         return Response(user_data, status=200)
