@@ -15,22 +15,32 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     setErrorMessage("");  // Reset previous error message
-
+  
     // Validate form fields before sending request
     if (!username || !password) {
       setErrorMessage("Please fill in both fields.");
       setLoading(false);
       return;
     }
-
+  
     try {
       const response = await api.post("/login/", {
         username,
         password,
       });
-      console.log("Login successful:", response.data);
-      alert("Login successful!");  // Display success message
-      window.location.href = "/dashboard";  // Redirect to a protected route
+  
+      // Check if the response contains an access token
+      if (response.data && response.data.access_token) {
+        // Store the access token in localStorage
+        localStorage.setItem("access_token", response.data.access_token);
+  
+        console.log("Login successful:", response.data);
+        alert("Login successful!");  // Display success message
+        window.location.href = "/dashboard";  // Redirect to the dashboard
+      } else {
+        // Handle missing access token in response
+        setErrorMessage("Login failed. Invalid credentials.");
+      }
     } catch (error) {
       console.error("Login failed:", error);
       setErrorMessage(error.response ? error.response.data.error : "Login failed. Please try again.");
@@ -38,6 +48,7 @@ const Login = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <>

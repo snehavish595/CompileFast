@@ -131,18 +131,14 @@ def login(request):
         })
     return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
-
 class UserProfile(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         user = request.user
 
-        user_data={
-            "username": user.username,
-            "email": user.email,
-            "bio":user.profile.bio if hasattr(user, 'profile') else "",
-            "profile_picture":user.profile.profile_picture.url if hasattr(user, 'profile') and user.profile.profile_picture else "",
+        user_data = {
+            "username": user.username,    
         }
 
-        return Response(user_data, status=status.HTTP_200_OK)
+        return Response(user_data, status=200)
