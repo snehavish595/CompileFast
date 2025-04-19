@@ -13,6 +13,11 @@ const Register = () => {
   const [fullName, setFullName] = useState(""); // Track loading state
   const [errorMessage, setErrorMessage] = useState(""); // Store error message
 
+  const validatePassword = (password) => {
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    return regex.test(password);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -21,6 +26,12 @@ const Register = () => {
     // Validate form fields before sending request
     if (!username || !email || !password) {
       setErrorMessage("Please fill in all fields.");
+      setLoading(false);
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      setErrorMessage("Password must be at least 8 characters long and contain both letters and numbers.");
       setLoading(false);
       return;
     }
@@ -94,7 +105,7 @@ const Register = () => {
 
               <div className="mt-4">
                 <label htmlFor="username" className="sr-only">
-                  Username
+                  Full Name
                 </label>
                 <input
                   id="fullName"

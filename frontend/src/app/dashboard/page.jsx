@@ -72,20 +72,7 @@ const Dashboard = () => {
               Here’s what’s happening in your coding journey.
             </p>
           </div>
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="px-3 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg text-sm text-gray-800 dark:text-white"
-            >
-              {darkMode ? "Light Mode ☀️" : "Dark Mode 🌙"}
-            </button>
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-lg"
-            >
-              Logout
-            </button>
-          </div>
+         
         </div>
 
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">

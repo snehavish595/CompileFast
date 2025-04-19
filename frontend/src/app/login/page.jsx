@@ -1,54 +1,63 @@
-"use client";  // Ensure this is a client-side component
+"use client"; // Ensure this is a client-side component
 
 import React, { useState } from "react";  
 import api from "../api"; 
 import Navbar from "./../components/Navbar";
 import Footer from "./../components/Footer";
+const jwtDecode = require("jwt-decode");
 
 const Login = () => {
   const [username, setUsername] = useState("");  
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);  // Track loading state
-  const [errorMessage, setErrorMessage] = useState("");  // Store error message
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const checkTokenExpiry = () => {
+    const token = document.cookie.match(/access_token=([^;]+)/)?.[1];
+    if (!token) return false;
+    
+    const decoded = jwtDecode(token);
+    const currentTime = Date.now() / 1000; // Current time in seconds
+    
+    if (decoded.exp < currentTime) {
+      alert("Session expired. Please log in again.");
+      document.cookie = "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;"; 
+      window.location.href = "/login";
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setErrorMessage("");  // Reset previous error message
-  
-    // Validate form fields before sending request
+    setErrorMessage(""); 
+
     if (!username || !password) {
       setErrorMessage("Please fill in both fields.");
       setLoading(false);
       return;
     }
-  
+
     try {
-      const response = await api.post("/login/", {
-        username,
-        password,
-      });
-  
-      // Check if the response contains an access token
+      const response = await api.post("/login/", { username, password });
       if (response.data && response.data.access_token) {
-        // Store the access token in localStorage
-        localStorage.setItem("access_token", response.data.access_token);
-  
+        // Store the access token in HttpOnly cookie
+        document.cookie = `access_token=${response.data.access_token}; path=/; secure; HttpOnly; SameSite=Strict`;
         console.log("Login successful:", response.data);
-        alert("Login successful!");  // Display success message
-        window.location.href = "/dashboard";  // Redirect to the dashboard
+        alert("Login successful!");
+        window.location.href = "/dashboard"; 
       } else {
-        // Handle missing access token in response
-        setErrorMessage("Login failed. Invalid credentials.");
+        setErrorMessage("Invalid credentials.");
       }
     } catch (error) {
-      console.error("Login failed:", error);
       setErrorMessage(error.response ? error.response.data.error : "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
-  
+
+  const Spinner = () => (
+    <div className="spinner-border animate-spin border-4 border-teal-500 border-t-transparent w-6 h-6 rounded-full"></div>
+  );
 
   return (
     <>
@@ -67,7 +76,6 @@ const Login = () => {
             </p>
           </div>
 
-          {/* Error message */}
           {errorMessage && (
             <div className="text-red-500 text-center mb-4">
               <p>{errorMessage}</p>
@@ -76,7 +84,6 @@ const Login = () => {
 
           <form className="mt-8 space-y-6" onSubmit={handleLogin}>
             <div className="rounded-md shadow-sm -space-y-px">
-              {/* Username Field */}
               <div>
                 <label htmlFor="username" className="sr-only">
                   Username
@@ -93,7 +100,6 @@ const Login = () => {
                 />
               </div>
 
-              {/* Password Field */}
               <div className="mt-4">
                 <label htmlFor="password" className="sr-only">
                   Password
@@ -111,18 +117,13 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Submit Button */}
             <div>
               <button
                 type="submit"
-                disabled={loading}  // Disable button while loading
+                disabled={loading}
                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
               >
-                {loading ? (
-                  <span>Loading...</span> // Show loading text when submitting
-                ) : (
-                  <span>Sign in</span> // Normal button text
-                )}
+                {loading ? <Spinner /> : "Sign in"}
               </button>
             </div>
           </form>
